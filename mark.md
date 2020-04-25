@@ -37,3 +37,18 @@ std::mutex
 std::lock_guard
 
 c++ 标准库为互斥量提供了一个RAII语法的模板类std::lock_guard，其会在构造的时候提供已锁的互斥量，并在析构的时候进行解锁，从而保证了一个已锁的互斥量总是会被正确的解锁
+
+std::lock
+
+std::adopt_lock: std::lock_guard 对象可获取锁之外，还将锁交由 std::lock_guard 对象管理，而不需要 std::lock_guard 对象再去构建新的锁
+
+std::recursive_mutex
+
+避免死锁:
+
+1. 避免嵌套锁
+2. 避免在持有锁时，调用用户提供的代码
+3. 使用固定顺序获取锁
+4. 使用锁的层次结构 比如 listing_3.8.cpp 中 hierarchical_mutex 的实现
+
+thread_local

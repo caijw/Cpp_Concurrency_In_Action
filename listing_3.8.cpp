@@ -1,3 +1,4 @@
+// [by kingwei] 层级锁的实现
 #include <mutex>
 #include <stdexcept>
 
@@ -6,7 +7,7 @@ class hierarchical_mutex
     std::mutex internal_mutex;
     unsigned long const hierarchy_value;
     unsigned long previous_hierarchy_value;
-    static thread_local unsigned long this_thread_hierarchy_value;
+    static thread_local unsigned long this_thread_hierarchy_value; // [by kingwei]每个线程局部存储的静态变量
 
     void check_for_hierarchy_violation()
     {
