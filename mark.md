@@ -1,5 +1,11 @@
 # mark
 
+## 管理线程
+
+1. 启动新线程
+2. 等待线程与分离线程
+3. 线程唯一标识符
+
 异常安全问题 exception safety
 
 std::thread
@@ -30,6 +36,12 @@ t.get_id();
 
 std::this_thread::get_id()
 
+## 线程间共享数据
+
+1. 共享数据带来的问题
+2. 使用互斥量保护数据
+3. 数据保护的替代方案
+
 数据竞争，一种特殊的条件竞争：并发的去修改一个独立对象，数据竞争是（可怕的）未定义行为的起因。
 
 std::mutex
@@ -42,7 +54,7 @@ std::lock
 
 std::adopt_lock: std::lock_guard 对象可获取锁之外，还将锁交由 std::lock_guard 对象管理，而不需要 std::lock_guard 对象再去构建新的锁
 
-std::recursive_mutex
+std::defer_lock
 
 避免死锁:
 
@@ -52,3 +64,37 @@ std::recursive_mutex
 4. 使用锁的层次结构 比如 listing_3.8.cpp 中 hierarchical_mutex 的实现
 
 thread_local
+
+std::unique_lock vs std::lock_guard
+
+std::once_flag
+
+std::call_once
+
+std::shared_mutex
+
+std::shared_lock
+
+std::recursive_mutex 嵌套锁，一般用在可并发访问的类上
+
+## 同步并发操作
+
+1. 等待事件
+2. 带有期望的等待一次性事件
+3. 在限定时间内等待
+4. 使用同步操作简化代码
+
+条件变量（condition variables）
+
+期望（future）
+
+std::condition_variable 和 std::condition_variable_any，两者都需要与一个互斥量一起才能工作（互斥量是为了同步）；前者仅限于与 std::mutex 一起工作，而后者可以和任何满足最低标准的互斥量一起工作。
+
+使用队列在多个线程中转移数据是很常见的，做的好的话，同步操作可以限制在队列本身，
+同步问题和条件竞争出现的改了也会降低。
+
+cond.wait
+
+cond.notify_one
+
+cond.notify_all

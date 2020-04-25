@@ -7,6 +7,10 @@ template<typename T>
 class threadsafe_queue
 {
 private:
+    // [by kingwei] 互斥量是可变的
+    // 如果锁住互斥量是一个可变操作
+    // 那么这个互斥量对象就会标记为可变的
+    // mutable 只能用来修饰类的数据成员；而被 mutable 修饰的数据成员，可以在 const 成员函数中修改。
     mutable std::mutex mut;
     std::queue<T> data_queue;
     std::condition_variable data_cond;
@@ -15,6 +19,7 @@ public:
     {}
     threadsafe_queue(threadsafe_queue const& other)
     {
+        // [by kingwei] todo
         std::lock_guard<std::mutex> lk(other.mut);
         data_queue=other.data_queue;
     }
@@ -64,6 +69,8 @@ public:
 
     bool empty() const
     {
+        // 常量成员函数，锁住互斥量是一个可变操作，需要将互斥量声明为 mutable
+        // 就可以在empty() 和 拷贝构造函数中上锁了
         std::lock_guard<std::mutex> lk(mut);
         return data_queue.empty();
     }
